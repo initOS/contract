@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="contract_line_qty_formula_days_of_the_month" model="contract.line.qty.formula">
+        <field name="name">Days of the Month</field>
+        <field name="code"><![CDATA[
+def is_leap_year(year):
+    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
+
+result = 30
+if contract.recurring_next_date:
+    year, month = [int(x) for x in contract.recurring_next_date.split('-', 2)[:2]]
+    if month == 2:
+        result = 29 if is_leap_year(year) else 28
+    elif month in [1, 3, 5, 7, 8, 10, 12]:
+        result = 31]]>
+        </field>
+    </record>
+</odoo>
