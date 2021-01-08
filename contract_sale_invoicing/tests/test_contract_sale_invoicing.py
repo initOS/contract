@@ -1,4 +1,5 @@
 # Copyright 2018 Tecnativa - Carlos Dauden
+# Copyright 2021 initos Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo.addons.contract.tests.test_contract import TestContractBase
@@ -8,7 +9,8 @@ class TestContractSaleInvoicing(TestContractBase):
     @classmethod
     def setUpClass(cls):
         super(TestContractSaleInvoicing, cls).setUpClass()
-        cls.contract.group_id = cls.env["account.analytic.account"].search([], limit=1)
+        cls.contract.group_id = cls.env["account.analytic.account"].search([
+        ], limit=1)
         cls.product_so = cls.env.ref("product.product_product_1")
         cls.product_so.invoice_policy = "order"
         cls.sale_order = cls.env["sale.order"].create(
@@ -31,7 +33,7 @@ class TestContractSaleInvoicing(TestContractBase):
                 ],
                 "pricelist_id": cls.partner.property_product_pricelist.id,
                 "analytic_account_id": cls.contract.group_id.id,
-                "date_order": "2016-02-15",
+                "date_order": "2019-02-15",
             }
         )
 

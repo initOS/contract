@@ -1,7 +1,8 @@
 # Copyright 2018 Tecnativa - Carlos Dauden
+# Copyright 2021 initOS Gmbh
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ContractContract(models.Model):
@@ -13,9 +14,9 @@ class ContractContract(models.Model):
         "in contract invoice creation.",
     )
 
-    @api.multi
     def _recurring_create_invoice(self, date_ref=False):
-        invoices = super()._recurring_create_invoice(date_ref)
+        invoices = super(ContractContract,
+                         self)._recurring_create_invoice(date_ref)
         for contract in self:
             if not contract.invoicing_sales or not contract.recurring_next_date:
                 continue
@@ -30,13 +31,13 @@ class ContractContract(models.Model):
                     ("invoice_status", "=", "to invoice"),
                     (
                         "date_order",
-                        "<=",
-                        "{} 23:59:59".format(contract.recurring_next_date),
+                        ">=",
+                        "contract.recurring_next_date",
                     ),
                 ]
             )
             if sales:
-                invoice_ids = sales.action_invoice_create()
+                invoice_ids = sales._create_invoices()
                 invoices |= self.env["account.invoice"].browse(invoice_ids)[:1]
 
         return invoices
